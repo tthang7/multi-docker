@@ -1,0 +1,17 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t tthang7/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run tthang7/react-test npm test -- --coverage 
+
+after_success:
+    - docker build -t tthang7/multi-client ./client
+    - docker build -t tthang7/multi-nginx ./nginx
+    - docker build -t tthang7/multi-server ./server
+    - docker build -t tthang7/multi-worker ./worker
+    # Log in to the docker CLI
+    # take this images and push them to dockerhub
